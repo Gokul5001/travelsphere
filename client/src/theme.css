@@ -1,0 +1,190 @@
+    /* ===== TravelSphere Theme ===== */
+
+    :root {
+        --ts-primary: #0d6efd;
+        --ts-primary-dark: #0a4fc4;
+        --ts-accent: #ff8a3d;
+        --ts-navy: #0b1f3a;
+        --ts-ink: #1c2b3a;
+        --ts-cloud: #f5f8fc;
+    }
+    
+    body {
+        background-color: var(--ts-cloud);
+        color: var(--ts-ink);
+    }
+    
+    /* ---------- Navbar ---------- */
+    .ts-navbar {
+        background: var(--ts-navy);
+    }
+    
+    .ts-brand {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #fff !important;
+        font-size: 1.4rem;
+    }
+    
+    .ts-brand span {
+        color: var(--ts-accent);
+    }
+    
+    .ts-navbar .nav-link {
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-weight: 500;
+    }
+    
+    .ts-navbar .nav-link:hover {
+        color: #fff !important;
+    }
+    
+    .ts-btn-accent {
+        background: var(--ts-accent);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+    }
+    
+    .ts-btn-accent:hover {
+        background: #e6742a;
+        color: #fff;
+    }
+    
+    /* ---------- Hero (Home) ---------- */
+    .ts-hero {
+        min-height: 92vh;
+        display: flex;
+        align-items: center;
+        background:
+        linear-gradient(120deg, rgba(11, 31, 58, 0.82), rgba(13, 110, 253, 0.55)),
+        url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1600&q=80')
+            center/cover no-repeat;
+        color: #fff;
+    }
+    
+    .ts-hero h1 {
+        font-weight: 800;
+        font-size: 3rem;
+        line-height: 1.15;
+    }
+    
+    .ts-hero p.lead {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.15rem;
+    }
+    
+    .ts-hero-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 1rem;
+        padding: 2rem;
+    }
+    
+    .ts-stat {
+        font-weight: 700;
+        font-size: 1.6rem;
+        color: var(--ts-accent);
+    }
+    
+    .ts-feature-card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 8px 24px rgba(11, 31, 58, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+    }
+    
+    .ts-feature-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 30px rgba(11, 31, 58, 0.14);
+    }
+    
+    .ts-feature-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(13, 110, 253, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--ts-primary);
+    }
+    
+    /* ---------- Auth pages (Login / Register) ---------- */
+    .ts-auth-wrapper {
+        min-height: 100vh;
+        display: flex;
+    }
+    
+    .ts-auth-visual {
+        background:
+        linear-gradient(160deg, rgba(11, 31, 58, 0.88), rgba(13, 110, 253, 0.55)),
+        url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80')
+            center/cover no-repeat;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 4rem 3rem;
+    }
+    
+    .ts-auth-visual h2 {
+        font-weight: 700;
+        font-size: 2.1rem;
+    }
+    
+    .ts-auth-form-side {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+    
+    .ts-auth-card {
+        width: 100%;
+        max-width: 420px;
+    }
+    
+    .ts-auth-card .form-label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--ts-ink);
+    }
+    
+    .ts-auth-card .form-control {
+        border-radius: 0.6rem;
+        padding: 0.65rem 0.9rem;
+        border: 1px solid #dfe6ee;
+    }
+    
+    .ts-auth-card .form-control:focus {
+        border-color: var(--ts-primary);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    }
+    
+    .ts-submit-btn {
+        background: var(--ts-primary);
+        border: none;
+        border-radius: 0.6rem;
+        padding: 0.7rem 1rem;
+        font-weight: 600;
+    }
+    
+    .ts-submit-btn:hover {
+        background: var(--ts-primary-dark);
+    }
+    
+    .ts-auth-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 2rem;
+        padding: 0.3rem 0.9rem;
+        font-size: 0.85rem;
+        width: fit-content;
+    }
