@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
-import Navbar from '../components/Navbar';
+import Navbar from '../Components/Navbar';
 import '../styles/travelsphere-theme.css';
 
 const STATUS_STYLES = {

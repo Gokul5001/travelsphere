@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import AuthTicketPanel from '../components/AuthTicketPanel';
+import AuthTicketPanel from '../Components/AuthTicketPanel';
 import '../styles/travelsphere-theme.css';
 
 export default function Register() {
