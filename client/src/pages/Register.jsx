@@ -16,6 +16,8 @@ export default function Register() {
     phone: '',
   });
 
+
+
   
 
   function handleChange(e) {
