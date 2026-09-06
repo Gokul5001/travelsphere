@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
-import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './Components/PrivateRoute';
 import FlightSearch from './pages/FlightSearch';
 import HotelSearch from './pages/HotelSearch';
 import BusSearch from './pages/BusSearch';
