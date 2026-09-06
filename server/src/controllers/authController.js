@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { createUser, findUserByEmail } = require('../models/userModel');
+const { sendWelcomeEmail } = require('../services/emailService');
 
 const SALT_ROUNDS = 12;
 
@@ -26,6 +27,11 @@ async function register(req, res) {
     const token = generateToken(user);
 
     res.status(201).json({ user, token });
+
+    // fire-and-forget: don't let email issues affect the registration response
+    sendWelcomeEmail(user.email, user.fullName).catch((err) => {
+      console.error('Welcome email failed:', err.message);
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Registration failed' });
@@ -35,20 +41,14 @@ async function register(req, res) {
 async function login(req, res) {
   try {
     const { email, password } = req.body;
-
     const user = await findUserByEmail(email);
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
 
     const token = generateToken(user);
     const { password_hash, ...safeUser } = user;
-
     res.json({ user: safeUser, token });
   } catch (err) {
     console.error(err);
@@ -57,10 +57,8 @@ async function login(req, res) {
 }
 
 async function getMe(req, res) {
-  // req.user was attached by the protect middleware
   const { password_hash, ...safeUser } = req.user;
   res.json({ user: safeUser });
 }
 
-
-module.exports = { register, login, getMe  };
+module.exports = { register, login, getMe };
