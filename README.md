@@ -4,9 +4,8 @@ A full-stack travel booking platform — flights, hotels, buses, and holiday pac
 
 Built as a technical assessment for LemonTrip.
 
-- **Live app:** [ADD YOUR VERCEL URL]
-- **Live API:** [ADD YOUR RENDER URL]/api/health
-- **GitHub repo:** [ADD YOUR REPO URL]
+- **Live app:** https://client-xi-seven-35.vercel.app/
+- **Live API:** https://travelsphere-api-t500.onrender.com/api/v1
 
 ---
 
