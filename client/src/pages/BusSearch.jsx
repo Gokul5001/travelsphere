@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../api/axiosClient';
+import { addToCart } from '../api/cartApi';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../Components/Navbar';
 import '../styles/travelsphere-theme.css';
@@ -52,6 +53,10 @@ export default function BusSearch() {
   const [bookingError, setBookingError] = useState(null);
   const [bookingSuccess, setBookingSuccess] = useState(null);
 
+  // cart state, keyed by bus id
+  const [cartAddingId, setCartAddingId] = useState(null);
+  const [cartNotice, setCartNotice] = useState(null);
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
@@ -67,6 +72,7 @@ export default function BusSearch() {
     setSearchError(null);
     setBookingSuccess(null);
     setBookingError(null);
+    setCartNotice(null);
 
     try {
       const params = {};
@@ -81,6 +87,31 @@ export default function BusSearch() {
       setSearchError(err.response?.data?.error || 'Search failed. Please try again.');
     } finally {
       setSearching(false);
+    }
+  }
+
+  async function handleAddToCart(bus) {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    setCartAddingId(bus.id);
+    setCartNotice(null);
+
+    try {
+      const trimmedCoupon = couponFor(bus.id).trim();
+      await addToCart({
+        itemType: 'bus',
+        itemId: bus.id,
+        quantity: seatsFor(bus.id),
+        details: trimmedCoupon ? { couponCode: trimmedCoupon } : {},
+      });
+      setCartNotice(`${bus.operator} ${bus.bus_number} added to your cart.`);
+    } catch (err) {
+      setCartNotice(err.response?.data?.error || 'Could not add this bus to your cart.');
+    } finally {
+      setCartAddingId(null);
     }
   }
 
@@ -273,6 +304,7 @@ export default function BusSearch() {
           {searchError && <Notice tone="error">{searchError}</Notice>}
           {bookingSuccess && <Notice tone="success">{bookingSuccess}</Notice>}
           {bookingError && <Notice tone="error">{bookingError}</Notice>}
+          {cartNotice && <Notice tone="info">{cartNotice}</Notice>}
 
           {!user && (
             <Notice tone="info">
@@ -298,6 +330,7 @@ export default function BusSearch() {
                 const isFull = bus.available_seats <= 0;
                 const isBookingThis = bookingId === bus.id;
                 const isWalletBookingThis = walletBookingId === bus.id;
+                const isAddingToCart = cartAddingId === bus.id;
 
                 return (
                   <div className="ts-row-item" key={bus.id}>
@@ -374,6 +407,16 @@ export default function BusSearch() {
                             onClick={() => handleBookWithWallet(bus)}
                           >
                             {isWalletBookingThis ? 'Paying from wallet...' : 'Pay with wallet'}
+                          </button>
+                        )}
+
+                        {!isFull && (
+                          <button
+                            className="ts-btn-outline-neutral w-100 mb-2"
+                            disabled={isAddingToCart}
+                            onClick={() => handleAddToCart(bus)}
+                          >
+                            {isAddingToCart ? 'Adding...' : 'Add to cart'}
                           </button>
                         )}
 

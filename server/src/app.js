@@ -6,6 +6,7 @@ const flightRoutes = require('./routes/flightRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const hotelRoutes = require('./routes/hotelRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 
 const busRoutes = require('./routes/busRoutes');
 const packageRoutes = require('./routes/packageRoutes');
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/bookings', bookingRoutes);
 app.use('/api/v1/wallet', require('./routes/walletRoutes'));
+app.use('/api/v1/cart', cartRoutes);
 app.use('/api/v1/buses', busRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -32,5 +34,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/flights', flightRoutes);
 app.use('/api/v1/hotels', hotelRoutes);
 app.use('/api/v1/packages', packageRoutes);
+app.use('/api/v1/visa', require('./routes/visaRoutes'));
+app.use('/api/v1/admin', require('./routes/adminRoutes'));
 
 module.exports = app;

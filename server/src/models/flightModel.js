@@ -1,3 +1,4 @@
+//flightmodel.js
 const pool = require('../config/db');
 
 async function searchFlights({ origin, destination, date, page = 1, limit = 10 }) {

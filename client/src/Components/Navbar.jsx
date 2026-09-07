@@ -1,4 +1,3 @@
-//navbar.jsx
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/travelsphere-theme.css';
@@ -33,6 +32,16 @@ function LogoutIcon() {
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
       <path d="M16 17l5-5-5-5" />
       <path d="M21 12H9" />
+    </svg>
+  );
+}
+
+function CartIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="20" r="1" />
+      <circle cx="18" cy="20" r="1" />
+      <path d="M2.5 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 8H6" />
     </svg>
   );
 }
@@ -80,6 +89,20 @@ export default function Navbar() {
             <li className="nav-item">
               <Link to="/packages" className="ts-nav-link">Packages</Link>
             </li>
+
+            {user && (
+              <li className="nav-item">
+                <Link to="/cart" className="ts-nav-link d-inline-flex align-items-center gap-1">
+                  <CartIcon />
+                  Cart
+                </Link>
+              </li>
+            )}
+{user?.role === 'admin' && (
+  <li className="nav-item">
+    <Link to="/admin" className="ts-nav-link">Admin</Link>
+  </li>
+)}
 
             {user ? (
               <li className="nav-item dropdown">

@@ -1,8 +1,7 @@
-//flightsearch.jsx
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../api/axiosClient';
+import { addToCart } from '../api/cartApi';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../Components/Navbar';
 import '../styles/travelsphere-theme.css';
@@ -53,6 +52,10 @@ export default function FlightSearch() {
   const [walletBookingId, setWalletBookingId] = useState(null); // which flight is being paid via wallet
   const [bookingSuccess, setBookingSuccess] = useState(null);
 
+  // cart state, keyed by flight id
+  const [cartAddingId, setCartAddingId] = useState(null);
+  const [cartNotice, setCartNotice] = useState(null);
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
@@ -79,6 +82,7 @@ export default function FlightSearch() {
     setSearchError(null);
     setBookingSuccess(null);
     setBookingError(null);
+    setCartNotice(null);
 
     try {
       const params = {};
@@ -93,6 +97,31 @@ export default function FlightSearch() {
       setSearchError(err.response?.data?.error || 'Search failed. Please try again.');
     } finally {
       setSearching(false);
+    }
+  }
+
+  async function handleAddToCart(flight) {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    setCartAddingId(flight.id);
+    setCartNotice(null);
+
+    try {
+      const trimmedCoupon = couponFor(flight.id).trim();
+      await addToCart({
+        itemType: 'flight',
+        itemId: flight.id,
+        quantity: seatsFor(flight.id),
+        details: trimmedCoupon ? { couponCode: trimmedCoupon } : {},
+      });
+      setCartNotice(`${flight.airline} ${flight.flight_number} added to your cart.`);
+    } catch (err) {
+      setCartNotice(err.response?.data?.error || 'Could not add this flight to your cart.');
+    } finally {
+      setCartAddingId(null);
     }
   }
 
@@ -297,6 +326,7 @@ export default function FlightSearch() {
           {searchError && <Notice tone="error">{searchError}</Notice>}
           {bookingSuccess && <Notice tone="success">{bookingSuccess}</Notice>}
           {bookingError && <Notice tone="error">{bookingError}</Notice>}
+          {cartNotice && <Notice tone="info">{cartNotice}</Notice>}
 
           {!user && (
             <Notice tone="info">
@@ -322,6 +352,7 @@ export default function FlightSearch() {
                 const isFull = flight.available_seats <= 0;
                 const isBookingThis = bookingId === flight.id;
                 const isWalletBookingThis = walletBookingId === flight.id;
+                const isAddingToCart = cartAddingId === flight.id;
 
                 return (
                   <div className="ts-row-item" key={flight.id}>
@@ -396,6 +427,16 @@ export default function FlightSearch() {
                             onClick={() => handleBookWithWallet(flight)}
                           >
                             {isWalletBookingThis ? 'Paying from wallet...' : 'Pay with wallet'}
+                          </button>
+                        )}
+
+                        {!isFull && (
+                          <button
+                            className="ts-btn-outline-neutral w-100 mb-2"
+                            disabled={isAddingToCart}
+                            onClick={() => handleAddToCart(flight)}
+                          >
+                            {isAddingToCart ? 'Adding...' : 'Add to cart'}
                           </button>
                         )}
 

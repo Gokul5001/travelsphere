@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../api/axiosClient';
+import { addToCart } from '../api/cartApi';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../Components/Navbar';
 import '../styles/travelsphere-theme.css';
@@ -52,6 +53,10 @@ export default function PackageSearch() {
   const [bookingError, setBookingError] = useState(null);
   const [bookingSuccess, setBookingSuccess] = useState(null);
 
+  // cart state, keyed by package id
+  const [cartAddingId, setCartAddingId] = useState(null);
+  const [cartNotice, setCartNotice] = useState(null);
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
@@ -67,6 +72,7 @@ export default function PackageSearch() {
     setSearchError(null);
     setBookingSuccess(null);
     setBookingError(null);
+    setCartNotice(null);
 
     try {
       const params = {};
@@ -79,6 +85,31 @@ export default function PackageSearch() {
       setSearchError(err.response?.data?.error || 'Search failed. Please try again.');
     } finally {
       setSearching(false);
+    }
+  }
+
+  async function handleAddToCart(pkg) {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    setCartAddingId(pkg.id);
+    setCartNotice(null);
+
+    try {
+      const trimmedCoupon = couponFor(pkg.id).trim();
+      await addToCart({
+        itemType: 'package',
+        itemId: pkg.id,
+        quantity: personsFor(pkg.id),
+        details: trimmedCoupon ? { couponCode: trimmedCoupon } : {},
+      });
+      setCartNotice(`${pkg.name} added to your cart.`);
+    } catch (err) {
+      setCartNotice(err.response?.data?.error || 'Could not add this package to your cart.');
+    } finally {
+      setCartAddingId(null);
     }
   }
 
@@ -245,6 +276,7 @@ export default function PackageSearch() {
           {searchError && <Notice tone="error">{searchError}</Notice>}
           {bookingSuccess && <Notice tone="success">{bookingSuccess}</Notice>}
           {bookingError && <Notice tone="error">{bookingError}</Notice>}
+          {cartNotice && <Notice tone="info">{cartNotice}</Notice>}
 
           {!user && (
             <Notice tone="info">
@@ -268,6 +300,7 @@ export default function PackageSearch() {
                 const isFull = pkg.available_slots <= 0;
                 const isBookingThis = bookingId === pkg.id;
                 const isWalletBookingThis = walletBookingId === pkg.id;
+                const isAddingToCart = cartAddingId === pkg.id;
 
                 return (
                   <div className="ts-row-item" key={pkg.id}>
@@ -333,6 +366,16 @@ export default function PackageSearch() {
                             onClick={() => handleBookWithWallet(pkg)}
                           >
                             {isWalletBookingThis ? 'Paying from wallet...' : 'Pay with wallet'}
+                          </button>
+                        )}
+
+                        {!isFull && (
+                          <button
+                            className="ts-btn-outline-neutral w-100 mb-2"
+                            disabled={isAddingToCart}
+                            onClick={() => handleAddToCart(pkg)}
+                          >
+                            {isAddingToCart ? 'Adding...' : 'Add to cart'}
                           </button>
                         )}
 

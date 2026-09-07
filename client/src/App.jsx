@@ -9,6 +9,8 @@ import FlightSearch from './pages/FlightSearch';
 import HotelSearch from './pages/HotelSearch';
 import BusSearch from './pages/BusSearch';
 import PackageSearch from './pages/PackageSearch';
+import CartPage from './pages/CartPage';
+import AdminDashboard from './pages/AdminDashboard';
 
 
 
@@ -25,10 +27,26 @@ function App() {
           <Route path="/buses" element={<BusSearch />} />
           <Route path="/packages" element={<PackageSearch />} />
           <Route
+  path="/admin"
+  element={
+    <PrivateRoute allowedRoles={['admin']}>
+      <AdminDashboard />
+    </PrivateRoute>
+  }
+/>
+          <Route
             path="/profile"
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <PrivateRoute>
+                <CartPage />
               </PrivateRoute>
             }
           />

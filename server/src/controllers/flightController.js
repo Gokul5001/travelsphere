@@ -1,3 +1,5 @@
+//flightController.js
+
 const { searchFlights, getFlightById } = require('../models/flightModel');
 const { createFlightBooking, getBookingsByUserId } = require('../models/bookingModel');
 
